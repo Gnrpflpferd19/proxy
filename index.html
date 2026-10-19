@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Backend-Dashboard</title>
+  <style>
+    :root { color-scheme: light dark; font-family: system-ui, sans-serif; }
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 20px; }
+    main { width: min(560px, 100%); border: 1px solid #8886; border-radius: 18px; padding: 24px; box-sizing: border-box; }
+    h1 { margin-top: 0; }
+    button { border: 0; border-radius: 10px; padding: 12px 16px; font: inherit; cursor: pointer; }
+    #status { margin-top: 18px; padding: 14px; border-radius: 10px; background: #8882; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .hint { opacity: .8; line-height: 1.5; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Backend-Dashboard</h1>
+    <p>Diese Seite prüft, ob die Netlify Function erreichbar ist.</p>
+    <button id="check">Backend testen</button>
+    <div id="status" role="status">Noch nicht getestet.</div>
+    <p class="hint">Dies ist ein funktionierender Backend-Test, aber kein Web-Proxy. Der separate private Server ist für eigene, autorisierte Dienste vorgesehen.</p>
+  </main>
+  <script>
+    const statusBox = document.querySelector("#status");
+    document.querySelector("#check").addEventListener("click", async () => {
+      statusBox.textContent = "Verbinde mit dem Backend …";
+      try {
+        const response = await fetch("/.netlify/functions/health", { cache: "no-store" });
+        const data = await response.json();
+        if (!response.ok) throw new Error("HTTP " + response.status);
+        statusBox.textContent = "Verbindung erfolgreich\\n" + JSON.stringify(data, null, 2);
+      } catch (error) {
+        statusBox.textContent = "Verbindung fehlgeschlagen: " + error.message;
+      }
+    });
+  </script>
+</body>
+</html>
