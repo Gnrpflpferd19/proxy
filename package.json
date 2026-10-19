@@ -1,0 +1,9 @@
+{
+  "name": "netlify-backend-private-server-starter",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start:server": "node server.js"
+  }
+}
